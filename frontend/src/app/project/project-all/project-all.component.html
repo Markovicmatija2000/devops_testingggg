@@ -1,0 +1,25 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">My projects</h2>
+    <div *ngIf="projects && projects.length; else noProjects" class="row row-cols-1 row-cols-md-2 g-4">
+        <div *ngFor="let project of projects" class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.name }}</h5>
+                    <p class="card-text">
+                        <strong>Completion Date:</strong> {{ project.completionDate | date:'dd.MM.yyyy' }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Min members:</strong> {{ project.minMembers }}
+                    </p>
+                    <p class="card-text">
+                        <strong>Max members:</strong> {{ project.maxMembers }}
+                    </p>
+                    <a [routerLink]="['/all-projects', project.id]" class="btn btn-outline-info">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #noProjects>
+        <p class="text-center text-muted">No projects available</p>
+    </ng-template>
+</div>

@@ -1,0 +1,22 @@
+<div class="verify-form">
+  <h2>Email Verification</h2>
+  <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+    <label for="code">Verification Code</label>
+    <input type="text" id="code" formControlName="code" />
+    <div
+      *ngIf="verifyForm.get('code')?.invalid && verifyForm.get('code')?.touched"
+    >
+      <small *ngIf="verifyForm.get('code')?.errors?.['required']"
+      >Verification code is required.</small
+      >
+      <small *ngIf="verifyForm.get('code')?.errors?.['minlength']"
+      >Code must be 6 characters long.</small
+      >
+      <small *ngIf="verifyForm.get('code')?.errors?.['maxlength']"
+      >Code must be 6 characters long.</small
+      >
+    </div>
+
+    <button type="submit" [disabled]="verifyForm.invalid">Verify</button>
+  </form>
+</div>

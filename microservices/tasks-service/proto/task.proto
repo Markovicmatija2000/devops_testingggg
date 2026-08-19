@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+option go_package = "proto/task";
+
+service TaskService {
+  rpc Create(CreateTaskReq) returns (EmptyResponse) {}
+  rpc GetAllByProjectId(GetAllTasksReq) returns (GetAllTasksRes) {}
+  rpc Delete(DeleteTaskReq) returns (EmptyResponse) {}
+  rpc GetById(GetByIdReq) returns (TaskResponse) {}
+  rpc AddMemberTask(AddMemberTaskReq) returns (EmptyResponse) {}
+  rpc RemoveMemberTask(RemoveMemberTaskReq) returns (EmptyResponse) {}
+  rpc UpdateTask(UpdateTaskReq) returns (EmptyResponse);
+  rpc DoneTasksByProject(DoneTasksByProjectReq) returns (DoneTasksByProjectRes);
+  rpc UploadFile(UploadFileRequest) returns (EmptyResponse);
+  rpc DownloadFile(DownloadFileRequest) returns (FileResponse);
+  rpc DeleteFile(DeleteFileRequest) returns (EmptyResponse);
+  rpc GetAllFiles (GetTaskFilesRequest) returns (GetTaskFilesResponse);
+}
+message DoneTasksByProjectReq {
+  string proj_id = 1;
+}
+message DoneTasksByProjectRes {
+  bool isDone = 1;
+}
+message EmptyResponse {}
+
+message CreateTaskReq {
+  Task task = 1;
+}
+message GetByIdReq {
+  string id = 1;
+}
+message DeleteTaskReq {
+  string id = 1;
+}
+message GetAllTasksReq {
+  string id = 1;
+}
+message GetAllByProjectIDReq {
+  string project_id = 1;
+}
+message TaskResponse {
+  Task task = 1;
+}
+message AddMemberTaskReq{
+  string taskId = 1;
+  User user = 2;
+}
+message RemoveMemberTaskReq {
+  string taskId = 1;
+  string userId = 2;
+}
+message GetAllTasksRes {
+  repeated Task tasks = 1;
+}
+message Task {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string status = 4;
+  string project_id = 5;
+  repeated User members = 6;
+}
+message User {
+  string id = 1;  // Define User fields based on your Go struct
+  string username = 2;
+  string role = 3;
+}
+
+service ProjectService {
+  rpc UserOnOneProject(UserOnOneProjectReq) returns (UserOnProjectRes) {}
+}
+
+service WorkflowService {
+  rpc TaskExists(TaskExistsRequest) returns (TaskExistsResponse) {}
+  rpc IsTaskBlocked(IsTaskBlockedReq) returns (IsTaskBlockedRes) {}
+}
+
+message IsTaskBlockedReq{
+  string TaskID = 1;
+}
+
+message IsTaskBlockedRes{
+  bool isBlocked = 1;
+}
+
+message UserOnOneProjectReq {
+  string projectId = 1;
+  string userId = 2;
+}
+message UserOnProjectRes {
+  bool isOnProj = 1;
+}
+message UpdateTaskReq {
+  string id = 1;              // Task ID
+  string name = 2;            // Updated name
+  string description = 3;     // Updated description
+  string status = 4;          // Updated status
+  repeated User members = 5;  // Updated members
+}
+message TaskExistsRequest {
+  string task_id = 1;
+}
+
+message TaskExistsResponse {
+  bool exists = 1;
+}
+
+message UploadFileRequest {
+  string taskId = 1;
+  bytes fileContent = 2;
+  string fileName = 3;
+  string userId = 4;
+}
+
+message DownloadFileRequest {
+  string taskId = 1;
+  string fileId = 2;
+}
+
+message FileResponse {
+  bytes fileContent = 1;
+}
+
+message DeleteFileRequest {
+  string taskId = 1;
+  string fileName = 2;
+}
+message GetTaskFilesRequest {
+  string taskId = 1;
+}
+
+message GetTaskFilesResponse {
+  repeated string fileNames = 1;
+}
+

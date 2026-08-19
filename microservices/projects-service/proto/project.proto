@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+option go_package = "proto/project";
+
+import "google/protobuf/timestamp.proto";
+
+service ProjectService {
+  rpc GetAllProjects(GetAllProjectsReq) returns (GetAllProjectsRes) {}
+  rpc Create(CreateProjectReq) returns (EmptyResponse) {}
+  rpc Delete(DeleteProjectReq) returns (EmptyResponse) {}
+  rpc GetById(GetByIdReq) returns (GetByIdRes) {}
+  rpc AddMember(AddMembersRequest) returns (EmptyResponse) {}
+  rpc UserOnProject(UserOnProjectReq) returns (UserOnProjectRes) {}
+  rpc RemoveMember(RemoveMembersRequest) returns (EmptyResponse) {}
+  rpc UserOnOneProject(UserOnOneProjectReq) returns (UserOnProjectRes) {}
+}
+message RemoveMembersRequest {
+  string projectId = 1;
+  string userId = 2;
+}
+message UserOnOneProjectReq{
+  string projectId = 1;
+  string user_id = 2;
+}
+message UserOnProjectRes{
+  bool onProject = 1;
+}
+message UserOnProjectReq{
+  string username = 1;
+  string role = 2;
+  int64 count = 3;
+}
+message Project {
+  string id = 1;  // primitive.ObjectID is represented as a string
+  string name = 2;
+  google.protobuf.Timestamp completionDate = 3;  // time.Time type in Go
+  int32 minMembers = 4;
+  int32 maxMembers = 5;
+  User manager = 6;
+  repeated User members = 7;
+}
+message User {
+  string id = 1;  // Define User fields based on your Go struct
+  string username = 2;
+  string role = 3;
+}
+
+message EmptyResponse {}
+
+message GetAllProjectsReq {
+//  string userId = 1;
+  string username = 1;
+}
+message GetAllProjectsRes {
+  repeated Project projects = 1;
+}
+
+message CreateProjectReq {
+  Project project = 1;
+}
+message DeleteProjectReq {
+  string id = 1;
+}
+message GetByIdReq {
+  string id = 1;
+}
+message GetByIdRes {
+  Project project = 1;
+}
+message AddMembersRequest{
+  string id = 1;  // Project ID (path parameter)
+  User user = 2;  // User details (body)
+}
+
+service TaskService {
+  rpc DoneTasksByProject(DoneTasksByProjectReq) returns (DoneTasksByProjectRes);
+}
+  message DoneTasksByProjectReq {
+    string proj_id = 1;
+  }
+  message DoneTasksByProjectRes {
+    bool isDone = 1;
+}
+
+service UserService {
+  rpc GetUserByUsername(GetUserByUsernameReq) returns (GetUserByUsernameRes);
+    }
+
+  message GetUserByUsernameReq{
+  string username = 1;
+      }
+
+  message GetUserByUsernameRes{
+  User user = 1;
+      }
+
