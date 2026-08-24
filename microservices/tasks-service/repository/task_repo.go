@@ -487,9 +487,9 @@ func (tr *TaskRepo) MarkTasksAsDeleting(projectID string, ctx context.Context) e
 
 	// Aggregation pipeline update
 	update := mongo.Pipeline{
-		{{"$set", bson.D{
-			{"name", bson.D{
-				{"$concat", bson.A{"$name", " (In deletion process)"}},
+		{{Key: "$set", Value: bson.D{
+			{Key: "name", Value: bson.D{
+				{Key: "$concat", Value: bson.A{"$name", " (In deletion process)"}},
 			}},
 		}}},
 	}
@@ -519,12 +519,12 @@ func (tr *TaskRepo) UnmarkTasksAsDeleting(projectID string, ctx context.Context)
 
 	// Aggregation pipeline update
 	update := mongo.Pipeline{
-		{{"$set", bson.D{
-			{"name", bson.D{
-				{"$replaceOne", bson.D{
-					{"input", "$name"},
-					{"find", " (In deletion process)"},
-					{"replacement", ""},
+		{{Key: "$set", Value: bson.D{
+			{Key: "name", Value: bson.D{
+				{Key: "$replaceOne", Value: bson.D{
+					{Key: "input", Value: "$name"},
+					{Key: "find", Value: " (In deletion process)"},
+					{Key: "replacement", Value: ""},
 				}},
 			}},
 		}}},

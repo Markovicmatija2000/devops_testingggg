@@ -63,7 +63,7 @@ func (repo *HDFSRepository) UploadFile(ctx context.Context, taskID, fileName str
 	hdfsDirPath := fmt.Sprintf("/tasks/%s", taskID)
 	err = repo.Client.MkdirAll(hdfsDirPath, 0755)
 	if err != nil {
-		log.Println("Failed to create directory on HDFS at %s: %v", hdfsDirPath)
+		log.Printf("Failed to create directory on HDFS at %s: %v", hdfsDirPath, err)
 		return fmt.Errorf("failed to create directory on HDFS at %s: %v", hdfsDirPath, err)
 	}
 	log.Printf("Directory ensured on HDFS: %s", hdfsDirPath)

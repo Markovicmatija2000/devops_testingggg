@@ -860,7 +860,7 @@ func (h *TaskHandler) DeleteFile(ctx context.Context, req *proto.DeleteFileReque
 		return nil, status.Error(codes.Internal, "Failed to delete file")
 	}
 
-	log.Printf("File deleted and notification sent: %s")
+	log.Println("File deleted and notification sent")
 
 	return &proto.EmptyResponse{}, nil
 }

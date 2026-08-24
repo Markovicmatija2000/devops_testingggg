@@ -1,0 +1,45 @@
+name: CI - tasks-service
+
+# Only runs when tasks-service code (or this workflow) changes.
+# Start small: one service, build + vet + test, no Docker, no deploy.
+on:
+  push:
+    paths:
+      - "microservices/tasks-service/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "microservices/tasks-service/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # Run every step inside the service's own module directory,
+    # since each microservice has its own go.mod/go.sum.
+    defaults:
+      run:
+        working-directory: microservices/tasks-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: microservices/tasks-service/go.mod
+          cache: true
+          cache-dependency-path: microservices/tasks-service/go.sum
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./... -v
