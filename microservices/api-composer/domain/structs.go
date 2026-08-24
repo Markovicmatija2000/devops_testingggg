@@ -70,7 +70,7 @@ func ParseTaskStatus2(status string) (Status, error) {
 	case "Done":
 		return Done, nil
 	default:
-		return Pending, fmt.Errorf("invalid status value: %d", status)
+		return Pending, fmt.Errorf("invalid status value: %s", status)
 	}
 }
 

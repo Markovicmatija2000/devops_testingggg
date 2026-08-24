@@ -391,17 +391,17 @@ func (r *WorkflowRepository) GetAllTasksFromAllWorkflows(ctx context.Context) ([
 // Provera da li zadati ID postoji među svim taskovima
 func (r *WorkflowRepository) TaskExistsInAllWorkflows(ctx context.Context, taskID string) (bool, error) {
 	tasks, err := r.GetAllTasksFromAllWorkflows(ctx)
-	log.Printf("tasks: %w", tasks)
+	log.Printf("tasks: %v", tasks)
 
 	if err != nil {
-		log.Printf("failed to get tasks: %w", err)
+		log.Printf("failed to get tasks: %v", err)
 
 		return false, fmt.Errorf("failed to get tasks: %w", err)
 	}
 
 	// Iteracija kroz taskove radi provere ID-a
 	for _, task := range tasks {
-		log.Printf("task: %w", task.TaskID)
+		log.Printf("task: %s", task.TaskID)
 
 		if task.TaskID == taskID {
 			return true, nil

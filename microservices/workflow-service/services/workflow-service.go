@@ -94,11 +94,11 @@ func (s *workflowService) TaskExists(ctx context.Context, req *proto.TaskExistsR
 
 	exists, err := s.repo.TaskExistsInAllWorkflows(ctx, req.TaskId)
 	if err != nil {
-		log.Printf("Task error in workflow", err)
+		log.Printf("Task error in workflow: %v", err)
 
 		return nil, err
 	}
-	log.Printf("Workflow exists function= %s", exists)
+	log.Printf("Workflow exists function= %v", exists)
 
 	return &proto.TaskExistsResponse{Exists: exists}, nil
 }

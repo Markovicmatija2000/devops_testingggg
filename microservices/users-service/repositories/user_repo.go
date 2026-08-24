@@ -419,7 +419,7 @@ func (tr *UserRepo) DeleteById(id string, ctx context.Context) error {
 	}
 
 	logger.Info(map[string]interface{}{"id": id}, "User deleted by ID successfully")
-	log.Printf("User deleted successfully", id)
+	log.Printf("User deleted successfully: %s", id)
 	return nil
 }
 

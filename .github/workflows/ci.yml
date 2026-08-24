@@ -1,25 +1,40 @@
-name: CI - tasks-service
+name: CI - microservices
 
-# Only runs when tasks-service code (or this workflow) changes.
-# Start small: one service, build + vet + test, no Docker, no deploy.
+# Runs when any microservice (or this workflow) changes. Every service in
+# the matrix below is rebuilt on each such push - simple to reason about
+# for now, at the cost of rebuilding services that didn't actually change.
 on:
   push:
     paths:
-      - "microservices/tasks-service/**"
+      - "microservices/**"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
-      - "microservices/tasks-service/**"
+      - "microservices/**"
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      # Don't cancel the other services just because one of them failed -
+      # we want to see every service's result, not just the first failure.
+      fail-fast: false
+      matrix:
+        service:
+          - analytics-service
+          - api-composer
+          - api-gateway
+          - notifications-service
+          - projects-service
+          - tasks-service
+          - users-service
+          - workflow-service
 
     # Run every step inside the service's own module directory,
     # since each microservice has its own go.mod/go.sum.
     defaults:
       run:
-        working-directory: microservices/tasks-service
+        working-directory: microservices/${{ matrix.service }}
 
     steps:
       - name: Checkout repository
@@ -28,9 +43,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: microservices/tasks-service/go.mod
+          go-version-file: microservices/${{ matrix.service }}/go.mod
           cache: true
-          cache-dependency-path: microservices/tasks-service/go.sum
+          cache-dependency-path: microservices/${{ matrix.service }}/go.sum
 
       - name: Download dependencies
         run: go mod download
