@@ -58,3 +58,18 @@ jobs:
 
       - name: Test
         run: go test ./... -v
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: microservices/${{ matrix.service }}
+          file: microservices/${{ matrix.service }}/Dockerfile
+          push: false
+          tags: ${{ matrix.service }}:ci
+          # Per-service cache scope so the 8 parallel matrix jobs don't
+          # trample each other's GitHub Actions cache entries.
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
